@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from 'db/data-source';
 import { BooksModule } from './books/books.module';
+import { UsersReadBookModule } from './users-read-book/users-read-book.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { BooksModule } from './books/books.module';
   }),
   TypeOrmModule.forRoot(dataSourceOptions),
   UsersModule,
-  BooksModule
+  BooksModule,
+  UsersReadBookModule
 ],
   controllers: [AppController],
   providers: [AppService],
