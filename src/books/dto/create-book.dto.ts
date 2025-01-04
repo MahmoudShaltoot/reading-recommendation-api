@@ -14,7 +14,4 @@ export class CreateBookDto {
     @Min(1)
     @Max(100000)
     num_of_pages: number;
-
-    @Exclude()
-    num_of_read_pages?: number;
 }
