@@ -3,7 +3,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
-export class BookService {
+export class BooksService {
   create(createBookDto: CreateBookDto) {
     return 'This action adds a new book';
   }
