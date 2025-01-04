@@ -5,7 +5,7 @@ export class CreateBookDto {
     @IsNotEmpty()
     @MinLength(1)
     @MaxLength(500)
-    title: string;
+    name: string;
 
     @IsNumber()
     @IsNotEmpty()
