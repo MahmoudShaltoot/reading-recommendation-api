@@ -9,6 +9,7 @@ import { dataSourceOptions } from 'db/data-source';
 import { BooksModule } from './books/books.module';
 import { UsersReadBookModule } from './users-read-book/users-read-book.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   EventEmitterModule.forRoot(),
   UsersModule,
   BooksModule,
-  UsersReadBookModule
+  UsersReadBookModule,
+  AuthModule
 ],
   controllers: [AppController],
   providers: [AppService],
