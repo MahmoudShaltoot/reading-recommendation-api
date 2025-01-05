@@ -23,4 +23,26 @@ export class RedisService {
 		return this.redis.smembers(key);
 	}
 
+	async getSetSize(key: string): Promise<number> {
+		return this.redis.scard(key)
+	}
+
+	async getSetKeysWithSize(pattern = '*') {
+		const keysWithSize: { key: string, size: number }[] = [];
+		let cursor = '0';
+		do {
+			const [newCursor, foundKeys] = await this.redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+			cursor = newCursor;
+
+			for (const key of foundKeys) {
+				const type = await this.redis.type(key);
+				if (type === 'set') {
+          const size = await this.redis.scard(key);
+          keysWithSize.push({ key, size });
+        }
+      }
+		} while (cursor !== '0');
+
+		return keysWithSize;
+	}
 }

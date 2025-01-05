@@ -3,13 +3,18 @@ import { UsersReadBookService } from './users-read-book.service';
 import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
 import { UpdateUserReadBookDto } from './dto/update-user-read-book.dto';
 
-@Controller('users-read-progress')
+@Controller('users-read')
 export class UsersReadBookController {
   constructor(private readonly usersReadBookService: UsersReadBookService) {}
 
   @Post()
   create(@Body() createUserReadBookDto: CreateUserReadBookDto) {
     return this.usersReadBookService.create(createUserReadBookDto);
+  }
+
+  @Get('/recommended-books')
+  getRecommendedBooks() {
+    return this.usersReadBookService.getRecommendedBooks()
   }
 
   @Get()

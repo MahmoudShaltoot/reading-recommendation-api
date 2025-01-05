@@ -8,6 +8,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 import * as _ from 'lodash';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { RedisService } from 'src/cache/redis.service';
 
 @Injectable()
 export class UsersReadBookService {
@@ -15,7 +16,8 @@ export class UsersReadBookService {
     @InjectRepository(UserReadBook) private usersReadBookRepository: Repository<UserReadBook>,
     @InjectRepository(User) private usersRepository: Repository<User>,
     @InjectRepository(Book) private booksRepository: Repository<Book>,
-    private eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
+    private readonly redisService: RedisService,
   ) { }
 
   async create(createUserReadBookDto: CreateUserReadBookDto) {
@@ -48,5 +50,24 @@ export class UsersReadBookService {
     const userReadBook = await this.usersReadBookRepository.findOneBy({ id });
 
     return this.usersReadBookRepository.remove(userReadBook);
+  }
+
+  async getRecommendedBooks() {
+    const bookReadPages = await this.redisService.getSetKeysWithSize();
+    
+    const sortedBookReadPages = bookReadPages.sort((a , b) => b.size - a.size)
+    
+    const recommendedBooks = [];
+    for (let i = 0; i < 5 && i < sortedBookReadPages.length; i++) {
+      const book = await this.booksRepository.findOneBy({id: Number(sortedBookReadPages[i].key)})
+      recommendedBooks.push({
+        book_id: book.id,
+        book_name: book.name,
+        num_of_pages: book.num_of_pages,
+        num_of_read_pages: sortedBookReadPages[i].size
+      })
+    }
+
+    return recommendedBooks;
   }
 }
