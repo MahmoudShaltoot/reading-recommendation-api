@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserReadBookEventHandler } from 'src/event-handler/user-read-book-event-handler.ts/user-read-book.handler';
 import { RedisService } from 'src/cache/redis.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
-  providers: [UsersService, UserReadBookEventHandler, RedisService],
+  providers: [UsersService, UserReadBookEventHandler, ConfigService, RedisService],
 })
 
 export class UsersModule {}
