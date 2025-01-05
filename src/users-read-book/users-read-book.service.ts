@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
 import { UpdateUserReadBookDto } from './dto/update-user-read-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +23,9 @@ export class UsersReadBookService {
   async create(createUserReadBookDto: CreateUserReadBookDto) {
     const user = await this.usersRepository.findOneBy({ id: createUserReadBookDto.user_id });
     const book = await this.booksRepository.findOneBy({ id: createUserReadBookDto.book_id });
+
+    if (createUserReadBookDto.start_page > createUserReadBookDto.end_page)
+      throw new BadRequestException('Start page must be less than end page');
 
     const rest = _.omit(createUserReadBookDto, ['user_id', 'book_id'])
     const userReadBook = await this.usersReadBookRepository.save({ user, book, ...rest });
