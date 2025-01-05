@@ -10,6 +10,7 @@ import { BooksModule } from './books/books.module';
 import { UsersReadBookModule } from './users-read-book/users-read-book.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CacheModule } from '@nestjs/cache-manager';
+import { RedisOptions } from './config/redis';
 
 @Module({
   imports: [
@@ -18,13 +19,12 @@ import { CacheModule } from '@nestjs/cache-manager';
   }),
   TypeOrmModule.forRoot(dataSourceOptions),
   EventEmitterModule.forRoot(),
-  CacheModule.register({ store: 'memory', ttl: 0, isGlobal: true }),
+  CacheModule.registerAsync(RedisOptions),
   UsersModule,
   BooksModule,
   UsersReadBookModule
 ],
   controllers: [AppController],
-  providers: [AppService],
-  exports: [CacheModule]
+  providers: [AppService]
 })
 export class AppModule {}
