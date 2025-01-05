@@ -7,13 +7,15 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 import * as _ from 'lodash';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UsersReadBookService {
   constructor(
     @InjectRepository(UserReadBook) private usersReadBookRepository: Repository<UserReadBook>,
     @InjectRepository(User) private usersRepository: Repository<User>,
-    @InjectRepository(Book) private booksRepository: Repository<Book>
+    @InjectRepository(Book) private booksRepository: Repository<Book>,
+    private eventEmitter: EventEmitter2
   ) { }
 
   async create(createUserReadBookDto: CreateUserReadBookDto) {
@@ -21,7 +23,11 @@ export class UsersReadBookService {
     const book = await this.booksRepository.findOneBy({ id: createUserReadBookDto.book_id });
 
     const rest = _.omit(createUserReadBookDto, ['user_id', 'book_id'])
-    return this.usersReadBookRepository.insert({ user, book, ...rest });
+    const userReadBook = await this.usersReadBookRepository.save({ user, book, ...rest });
+
+    this.eventEmitter.emitAsync('USER_READ_BOOK', userReadBook)
+
+    return userReadBook;
   }
 
   async findAll() {
