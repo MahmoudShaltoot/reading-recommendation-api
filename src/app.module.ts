@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from 'db/data-source';
 import { BooksModule } from './books/books.module';
 import { UsersReadBookModule } from './users-read-book/users-read-book.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersReadBookModule } from './users-read-book/users-read-book.module';
       load:  [configuration]
   }),
   TypeOrmModule.forRoot(dataSourceOptions),
+  EventEmitterModule.forRoot(),
   UsersModule,
   BooksModule,
   UsersReadBookModule
