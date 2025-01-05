@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersReadBookService } from './users-read-book.service';
-import { CreateUsersReadBookDto } from './dto/create-users-read-book.dto';
-import { UpdateUsersReadBookDto } from './dto/update-users-read-book.dto';
+import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
+import { UpdateUserReadBookDto } from './dto/update-user-read-book.dto';
 
-@Controller('users-read-book')
+@Controller('users-read-progress')
 export class UsersReadBookController {
   constructor(private readonly usersReadBookService: UsersReadBookService) {}
 
   @Post()
-  create(@Body() createUsersReadBookDto: CreateUsersReadBookDto) {
-    return this.usersReadBookService.create(createUsersReadBookDto);
+  create(@Body() createUserReadBookDto: CreateUserReadBookDto) {
+    return this.usersReadBookService.create(createUserReadBookDto);
   }
 
   @Get()
@@ -23,8 +23,8 @@ export class UsersReadBookController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUsersReadBookDto: UpdateUsersReadBookDto) {
-    return this.usersReadBookService.update(+id, updateUsersReadBookDto);
+  update(@Param('id') id: string, @Body() updateUserReadBookDto: UpdateUserReadBookDto) {
+    return this.usersReadBookService.update(+id, updateUserReadBookDto);
   }
 
   @Delete(':id')

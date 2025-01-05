@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUsersReadBookDto } from './dto/create-users-read-book.dto';
-import { UpdateUsersReadBookDto } from './dto/update-users-read-book.dto';
+import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
+import { UpdateUserReadBookDto } from './dto/update-user-read-book.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserReadBook } from './entities/user-read-book.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Book } from 'src/books/entities/book.entity';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UsersReadBookService {
-  create(createUsersReadBookDto: CreateUsersReadBookDto) {
-    return 'This action adds a new usersReadBook';
+  constructor(
+    @InjectRepository(UserReadBook) private usersReadBookRepository: Repository<UserReadBook>,
+    @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(Book) private booksRepository: Repository<Book>
+  ) { }
+
+  async create(createUserReadBookDto: CreateUserReadBookDto) {
+    const user = await this.usersRepository.findOneBy({ id: createUserReadBookDto.user_id });
+    const book = await this.booksRepository.findOneBy({ id: createUserReadBookDto.book_id });
+
+    const rest = _.omit(createUserReadBookDto, ['user_id', 'book_id'])
+    return this.usersReadBookRepository.insert({ user, book, ...rest });
   }
 
-  findAll() {
-    return `This action returns all usersReadBook`;
+  async findAll() {
+    return this.usersReadBookRepository.find({ relations: ['user', 'book'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usersReadBook`;
+  async findOne(id: number) {
+    return this.usersReadBookRepository.findOne({ where: { id }, relations: ['user', 'book'] });
   }
 
-  update(id: number, updateUsersReadBookDto: UpdateUsersReadBookDto) {
-    return `This action updates a #${id} usersReadBook`;
+  async update(id: number, updateUserDto: UpdateUserReadBookDto) {
+    const userReadBook = await this.usersReadBookRepository.findOneBy({ id });
+
+    return this.usersReadBookRepository.save({ ...userReadBook, ...updateUserDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usersReadBook`;
+  async remove(id: number) {
+    const userReadBook = await this.usersReadBookRepository.findOneBy({ id });
+
+    return this.usersReadBookRepository.remove(userReadBook);
   }
 }
