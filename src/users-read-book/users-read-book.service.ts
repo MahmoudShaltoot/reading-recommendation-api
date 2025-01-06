@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
 import { UpdateUserReadBookDto } from './dto/update-user-read-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,9 +6,9 @@ import { UserReadBook } from './entities/user-read-book.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
-import * as _ from 'lodash';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RedisService } from 'src/cache/redis.service';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class UsersReadBookService {
@@ -16,19 +16,20 @@ export class UsersReadBookService {
     @InjectRepository(UserReadBook) private usersReadBookRepository: Repository<UserReadBook>,
     @InjectRepository(User) private usersRepository: Repository<User>,
     @InjectRepository(Book) private booksRepository: Repository<Book>,
+    @Inject(REQUEST) private request: Record<string, any>,
     private readonly eventEmitter: EventEmitter2,
     private readonly redisService: RedisService,
   ) { }
 
   async create(createUserReadBookDto: CreateUserReadBookDto) {
-    const user = await this.usersRepository.findOneBy({ id: createUserReadBookDto.user_id });
+    const user = await this.usersRepository.findOneBy({ id: this.request.user.id });    
     const book = await this.booksRepository.findOneBy({ id: createUserReadBookDto.book_id });
 
-    if (createUserReadBookDto.start_page > createUserReadBookDto.end_page)
-      throw new BadRequestException('Start page must be less than end page');
+    if (createUserReadBookDto.start_page > book.num_of_pages || createUserReadBookDto.start_page > createUserReadBookDto.end_page) {
+      throw new BadRequestException('Invalid input');
+    }
 
-    const rest = _.omit(createUserReadBookDto, ['user_id', 'book_id'])
-    const userReadBook = await this.usersReadBookRepository.save({ user, book, ...rest });
+    const userReadBook = await this.usersReadBookRepository.save({ user, book, ...createUserReadBookDto });
 
     this.eventEmitter.emitAsync('USER_READ_BOOK', userReadBook)
 
@@ -40,7 +41,11 @@ export class UsersReadBookService {
   }
 
   async findOne(id: number) {
-    return this.usersReadBookRepository.findOne({ where: { id }, relations: ['user', 'book'] });
+    const read = await this.usersReadBookRepository.findOne({ where: { id }, relations: ['user', 'book'] });
+    if (!read) {
+      throw new NotFoundException()
+    }
+    return read;
   }
 
   async update(id: number, updateUserDto: UpdateUserReadBookDto) {

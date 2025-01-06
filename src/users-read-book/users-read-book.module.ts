@@ -7,10 +7,11 @@ import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 import { RedisService } from 'src/cache/redis.service';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserReadBook, User, Book])],
   controllers: [UsersReadBookController],
-  providers: [UsersReadBookService, RedisService, ConfigService],
+  providers: [UsersReadBookService, RedisService, ConfigService, JwtService],
 })
 export class UsersReadBookModule {}

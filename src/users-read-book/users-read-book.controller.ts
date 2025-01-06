@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { UsersReadBookService } from './users-read-book.service';
 import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
+import { JwtAuthGuard } from 'src/guards/auth.guard';
+import { JwtAdminAuthGuard } from 'src/guards/admin.guard';
+import { OwnerOrAdminGuard } from 'src/guards/owner-or-admin.guard';
 
-@Controller('users-read')
+@Controller('user-read')
 export class UsersReadBookController {
   constructor(private readonly usersReadBookService: UsersReadBookService) {}
 
-  @Post()
+  @UseGuards(JwtAuthGuard)
+  @Post('')
   create(@Body() createUserReadBookDto: CreateUserReadBookDto) {
     return this.usersReadBookService.create(createUserReadBookDto);
   }
@@ -16,11 +20,13 @@ export class UsersReadBookController {
     return this.usersReadBookService.getRecommendedBooks()
   }
 
+  @UseGuards(JwtAdminAuthGuard)
   @Get()
   findAll() {
     return this.usersReadBookService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, OwnerOrAdminGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersReadBookService.findOne(+id);
