@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, UserReadBookEventHandler, ConfigService, RedisService],
+  exports: [UsersService]
 })
 
 export class UsersModule {}
