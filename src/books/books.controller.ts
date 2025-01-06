@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -15,10 +15,13 @@ export class BooksController {
   }
 
   @Get()
-  findAll() {
-    return this.booksService.findAll();
+  findAll(
+    @Query('page') page: number = 0,
+    @Query('pageSize') pageSize: number = 10,
+  ) {
+    return this.booksService.findAll(page, pageSize);
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(+id);

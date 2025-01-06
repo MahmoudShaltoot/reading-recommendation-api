@@ -23,7 +23,7 @@ export class UsersReadBookController {
   @UseGuards(JwtAdminAuthGuard)
   @Get()
   findAll(
-    @Query('page') page: number = 1,
+    @Query('page') page: number = 0,
     @Query('pageSize') pageSize: number = 10,
   ) {
     return this.usersReadBookService.findAll(page, pageSize);

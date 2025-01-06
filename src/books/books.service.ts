@@ -13,8 +13,8 @@ export class BooksService {
     return this.booksRepository.insert(createBookDto);
   }
 
-  async findAll() {
-    return this.booksRepository.find();
+  async findAll(page: number, pageSize: number) {
+    return this.booksRepository.find({ skip: page * pageSize, take: pageSize });
   }
 
   async findOne(id: number) {

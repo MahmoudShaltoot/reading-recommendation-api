@@ -38,7 +38,6 @@ export class UsersReadBookService {
   }
 
   async findAll(page, pageSize) {
-    // @ts-ignore
     const reads = await this.usersReadBookRepository.find({ skip: page * pageSize, take: pageSize, relations: ['user', 'book']});
     return reads.map(read => _.omit(read, ['user.password']))
   }
