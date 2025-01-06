@@ -13,8 +13,8 @@ export class UsersService {
     return this.usersRepository.save(createUserDto);
   }
 
-  async findAll() {
-    return this.usersRepository.find();
+  async findAll(page, page_size) {
+    return this.usersRepository.find({ skip: page * page_size, take: page_size, select: ['id', 'full_name', 'created_at', 'updated_at', 'is_admin'] });
   }
 
   async findOne(id: number) {
@@ -25,15 +25,21 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username });
   }
 
+  // TO-DO
+  // Owner guard
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOneBy({id});
     
     return this.usersRepository.save({...user, ...updateUserDto});
   }
 
+  // TO-DO
+  // Owner guard
   async remove(id: number) {
     const user = await this.usersRepository.findOneBy({id});
 
+    // TO-DO
+    // Soft delete
     return this.usersRepository.remove(user);
   }
 }
