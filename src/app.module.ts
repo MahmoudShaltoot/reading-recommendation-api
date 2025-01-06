@@ -10,6 +10,7 @@ import { BooksModule } from './books/books.module';
 import { UsersReadBookModule } from './users-read-book/users-read-book.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AuthModule } from './auth/auth.module';
+import { SeedsModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -18,10 +19,11 @@ import { AuthModule } from './auth/auth.module';
   }),
   TypeOrmModule.forRoot(dataSourceOptions),
   EventEmitterModule.forRoot(),
+  AuthModule,
   UsersModule,
   BooksModule,
   UsersReadBookModule,
-  AuthModule
+  SeedsModule,
 ],
   controllers: [AppController],
   providers: [AppService],

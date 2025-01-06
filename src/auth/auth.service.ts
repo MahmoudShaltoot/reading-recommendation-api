@@ -26,7 +26,7 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { id: user.id, username: user.username, isAdmin: user.is_admin };
-    return { access_token: this.jwtService.sign(payload) };
+    return { access_token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET }) };
   }
 
   async register(user: CreateUserDto) {
