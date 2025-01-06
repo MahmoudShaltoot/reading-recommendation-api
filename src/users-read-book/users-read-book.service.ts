@@ -35,7 +35,7 @@ export class UsersReadBookService {
 
     this.eventEmitter.emitAsync('USER_READ_BOOK', userReadBook)
 
-    return userReadBook;
+    return _.omit(userReadBook, ['user.password']);
   }
 
   async findAll(page: number, pageSize: number) {     
