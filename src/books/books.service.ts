@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
@@ -10,6 +10,10 @@ export class BooksService {
   constructor(@InjectRepository(Book) private booksRepository: Repository<Book>) { }
 
   async create(createBookDto: CreateBookDto) {
+    const existingBook = await this.booksRepository.findBy({ name: createBookDto.name })
+    if (existingBook) {
+      throw new BadRequestException('book name already exists');
+    }
     return this.booksRepository.insert(createBookDto);
   }
 

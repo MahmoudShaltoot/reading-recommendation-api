@@ -1,4 +1,3 @@
-import { Exclude } from "class-transformer";
 import { IsInt, IsNotEmpty, IsNumber, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
 
 export class CreateBookDto {
