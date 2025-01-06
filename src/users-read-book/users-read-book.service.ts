@@ -61,7 +61,7 @@ export class UsersReadBookService {
     const userReadBook = await this.usersReadBookRepository.findOneBy({ id });
 
     // TO-DO
-    // Soft delete book
+    // Soft delete book then exclude the book from top 5 books 
     return this.usersReadBookRepository.remove(userReadBook);
   }
 

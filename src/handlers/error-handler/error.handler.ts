@@ -13,6 +13,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 				? exception.getResponse()
 				: 'Internal server error';
 
+		// TO-DO
+		// Send webhook to error tracking tool (sentry, ...)
+
 		// Send the error response
 		response.status(status).json({
 			statusCode: status,
