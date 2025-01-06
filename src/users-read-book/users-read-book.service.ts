@@ -9,6 +9,7 @@ import { Book } from 'src/books/entities/book.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RedisService } from 'src/cache/redis.service';
 import { REQUEST } from '@nestjs/core';
+import { RecommendedBook } from './interface/recommended-book.interface';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -37,7 +38,7 @@ export class UsersReadBookService {
     return userReadBook;
   }
 
-  async findAll(page, pageSize) {
+  async findAll(page: number, pageSize: number) {     
     const reads = await this.usersReadBookRepository.find({ skip: page * pageSize, take: pageSize, relations: ['user', 'book']});
     return reads.map(read => _.omit(read, ['user.password']))
   }
@@ -59,15 +60,21 @@ export class UsersReadBookService {
   async remove(id: number) {
     const userReadBook = await this.usersReadBookRepository.findOneBy({ id });
 
+    // TO-DO
+    // Soft delete book
     return this.usersReadBookRepository.remove(userReadBook);
   }
 
-  async getRecommendedBooks() {
+  /**
+   * 
+   * @returns Top 5 read books
+   */
+  async getRecommendedBooks(): Promise<RecommendedBook[]> {
     const bookReadPages = await this.redisService.getSetKeysWithSize();
     
     const sortedBookReadPages = bookReadPages.sort((a , b) => b.size - a.size)
     
-    const recommendedBooks = [];
+    const recommendedBooks: RecommendedBook[] = [];
     for (let i = 0; i < 5 && i < sortedBookReadPages.length; i++) {
       const book = await this.booksRepository.findOneBy({id: Number(sortedBookReadPages[i].key)})
       recommendedBooks.push({
