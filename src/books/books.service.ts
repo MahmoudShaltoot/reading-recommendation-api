@@ -10,7 +10,7 @@ export class BooksService {
   constructor(@InjectRepository(Book) private booksRepository: Repository<Book>) { }
 
   async create(createBookDto: CreateBookDto) {
-    const existingBook = await this.booksRepository.findBy({ name: createBookDto.name })
+    const existingBook = await this.booksRepository.findOneBy({ name: createBookDto.name })
     if (existingBook) {
       throw new BadRequestException('book name already exists');
     }
