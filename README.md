@@ -1,6 +1,6 @@
 ## Description
 
-a Reading Recommendation System API, which allows users to submit their reading intervals and recommends the top-rated books in the system based on the number of unique pages read by all users.
+Reading Recommendation System API, which allows users to submit their reading intervals and recommends the top-rated books in the system based on the number of unique pages read by all users.
 
 ## Prerequisites
 
@@ -18,6 +18,10 @@ $ git clone https://github.com/MahmoudShaltoot/reading-recommendation-api.git
 
 ## Project setup
 
+### Set .env
+create .env and set all environment vairables
+
+### Run database migrations
 ```bash
 $ npm run migration:run
 ```
