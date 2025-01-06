@@ -21,15 +21,15 @@ $ git clone https://github.com/MahmoudShaltoot/reading-recommendation-api.git
 ### Set .env
 create .env and set all environment vairables
 
-### Run database migrations
-```bash
-$ npm run migration:run
-```
-
-## Project setup
+### Intstall dependencies
 
 ```bash
 $ npm install
+```
+
+### Run database migrations
+```bash
+$ npm run migration:run
 ```
 
 ## Compile and run the project
