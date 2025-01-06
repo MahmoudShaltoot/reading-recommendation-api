@@ -3,10 +3,11 @@ import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
 import { Book } from './entities/book.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Book])],
   controllers: [BooksController],
-  providers: [BooksService],
+  providers: [BooksService, JwtService],
 })
 export class BooksModule {}
