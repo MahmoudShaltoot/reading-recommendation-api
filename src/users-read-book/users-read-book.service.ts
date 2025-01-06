@@ -9,6 +9,7 @@ import { Book } from 'src/books/entities/book.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RedisService } from 'src/cache/redis.service';
 import { REQUEST } from '@nestjs/core';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UsersReadBookService {
@@ -36,8 +37,10 @@ export class UsersReadBookService {
     return userReadBook;
   }
 
-  async findAll() {
-    return this.usersReadBookRepository.find({ relations: ['user', 'book'] });
+  async findAll(page, pageSize) {
+    // @ts-ignore
+    const reads = await this.usersReadBookRepository.find({ skip: page * pageSize, take: pageSize, relations: ['user', 'book']});
+    return reads.map(read => _.omit(read, ['user.password']))
   }
 
   async findOne(id: number) {
@@ -45,7 +48,7 @@ export class UsersReadBookService {
     if (!read) {
       throw new NotFoundException()
     }
-    return read;
+    return _.omit(read, ['user.password']);
   }
 
   async update(id: number, updateUserDto: UpdateUserReadBookDto) {

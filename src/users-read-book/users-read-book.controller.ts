@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
 import { UsersReadBookService } from './users-read-book.service';
 import { CreateUserReadBookDto } from './dto/create-user-read-book.dto';
 import { JwtAuthGuard } from 'src/guards/auth.guard';
@@ -22,8 +22,11 @@ export class UsersReadBookController {
 
   @UseGuards(JwtAdminAuthGuard)
   @Get()
-  findAll() {
-    return this.usersReadBookService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ) {
+    return this.usersReadBookService.findAll(page, pageSize);
   }
 
   @UseGuards(JwtAuthGuard, OwnerOrAdminGuard)
