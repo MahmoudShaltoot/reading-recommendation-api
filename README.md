@@ -19,13 +19,13 @@ $ git clone https://github.com/MahmoudShaltoot/reading-recommendation-api.git
 ## Project setup
 
 ```bash
-$ npm run migration:run
+$ npm install
 ```
 
-## Project setup
+## Run database migration
 
 ```bash
-$ npm install
+$ npm run migration:run
 ```
 
 ## Compile and run the project
