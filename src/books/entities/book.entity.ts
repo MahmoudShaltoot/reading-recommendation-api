@@ -12,9 +12,6 @@ export class Book {
     @Column({ nullable: false })
     num_of_pages: number;
 
-    @Column({ default: 0 })
-    num_of_read_pages: number;
-
     @CreateDateColumn()
     created_at: Date;
   
