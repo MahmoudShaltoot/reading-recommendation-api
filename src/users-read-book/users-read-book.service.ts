@@ -27,7 +27,7 @@ export class UsersReadBookService {
     const user = await this.usersRepository.findOneBy({ id: this.request.user.id });    
     const book = await this.booksRepository.findOneBy({ id: createUserReadBookDto.book_id });
 
-    if (createUserReadBookDto.start_page > book.num_of_pages || createUserReadBookDto.start_page > createUserReadBookDto.end_page) {
+    if (createUserReadBookDto.end_page > book.num_of_pages || createUserReadBookDto.start_page > createUserReadBookDto.end_page) {
       throw new BadRequestException('Invalid input');
     }
 
